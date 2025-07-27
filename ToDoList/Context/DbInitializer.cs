@@ -57,8 +57,12 @@ namespace ToDoList.Context
                 context.SaveChanges();
             }
         }
+<<<<<<< HEAD
         }
 }
     
+=======
+    }
+>>>>>>> f9fd53617b2ca6722f9a0be168a7581969f3f906
 
 

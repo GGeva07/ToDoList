@@ -22,6 +22,7 @@ namespace ToDoList.Services
             try
             {
                 var tarea = context.Tarea.ToListAsync();
+                if (tarea == null) return null;
                 return await tarea;
             }catch(Exception e)
             {
@@ -35,10 +36,8 @@ namespace ToDoList.Services
             try
             {
                 var tarea = await context.Tarea.FirstOrDefaultAsync(t => t.id == id);
-                if (tarea == null)
-                {
-                    return new { message = "Tarea no encontrada" };
-                }
+                if (tarea == null) return null;
+
                 return tarea;
             }
             catch (Exception e)
@@ -52,6 +51,7 @@ namespace ToDoList.Services
             try
             {
                 var Tareas = context.Tarea.Where(t => t.Nombre == Nombre).ToListAsync();
+                if (Tareas == null) return null;
                 return await Tareas;
             }
             catch(Exception e)
@@ -67,6 +67,7 @@ namespace ToDoList.Services
             {
 
                 var tarea = context.Tarea.Where(t => t.idUsuario == id).ToListAsync();
+                if (tarea == null) return null;
                 return await tarea;
             }
             catch (Exception e)
@@ -83,12 +84,10 @@ namespace ToDoList.Services
                 var usuario = await context.Usuario
                     .FirstOrDefaultAsync(u => u.id == model.idUsuario);
 
-                if (usuario == null)
-                {
-                    return new { message = "Usuario no encontrado" };
-                }
+                Console.WriteLine(usuario);
 
-                model.idUsuario = model.idUsuario;
+                if (usuario == null) return null;
+
                 await context.Tarea.AddAsync(model);
                 await context.SaveChangesAsync();
 
@@ -107,10 +106,7 @@ namespace ToDoList.Services
             var tarea = await context.Tarea
                 .FirstOrDefaultAsync(t => t.id == model.id && t.idUsuario == model.idUsuario);
 
-            if (tarea == null)
-            {
-                return new { message = "Tarea no encontrada" };
-            }
+            if (tarea == null) return null;
 
             tarea.Nombre = model.Nombre;
             tarea.Contenido = model.Contenido;
@@ -125,18 +121,13 @@ namespace ToDoList.Services
             try
             {
                 var tareaEliminar = await context.Tarea
-                    .FirstOrDefaultAsync(t => t.id == id);
+    .FirstOrDefaultAsync(t => t.id == id);
                 var tarea = await context.Tarea.FirstOrDefaultAsync(T => T.idUsuario == tareaEliminar.idUsuario);
-
-                if (tareaEliminar == null )
-                {
-                    return new { message = "Tarea a eliminar no encontrada" };
-                }
+                if (tarea == null || tareaEliminar == null ) return null;
 
                 context.Tarea.Remove(tarea);
                 await context.SaveChangesAsync();
-
-                return new { message = "Tarea eliminada", tarea = tareaEliminar };
+                return new { message = "Tarea eliminada" };
             }
             catch (Exception e)
             {
@@ -144,9 +135,17 @@ namespace ToDoList.Services
             }
         }
 
-        public Task<object> Delete(int id, int idUsuario)
+        public async Task<object> Delete(int id, int idUsuario)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await Delete(id);
+                return new { message = "Tarea eliminada"};
+            }
+            catch (Exception e)
+            {
+                return new { error = $"Error: {e.Message}" };
+            }
         }
     }
 }

@@ -2,23 +2,22 @@
 
 namespace ToDoList.Context
 {
-    namespace TuProyecto.Data
-    {
         public static class DbInitializer
         {
-            public static void Initialize(TodoListDBContext context)
+        public static void Initialize(TodoListDBContext context)
+        {
+
+            context.Database.EnsureCreated();
+
+
+            if (context.Usuario.Any())
             {
+                return;
 
-                context.Database.EnsureCreated();
 
 
-                if (context.Usuario.Any())
+                var usuarios = new Usuario[]
                 {
-                    return;
-
-
-                    var usuarios = new Usuario[]
-                    {
                 new Usuario
                 {
                     usuarioNombre = "admin",
@@ -31,13 +30,13 @@ namespace ToDoList.Context
                     correo = "usuario1@example.com",
                     contrasenia = "password123"
                 }
-                    };
+                };
 
-                    context.Usuario.AddRange(usuarios);
-                    context.SaveChanges();
+                context.Usuario.AddRange(usuarios);
+                context.SaveChanges();
 
-                    var tareas = new Tarea[]
-                    {
+                var tareas = new Tarea[]
+                {
                 new Tarea
                 {
                     Nombre = "Primera tarea",
@@ -52,13 +51,14 @@ namespace ToDoList.Context
                     Estado = "En Progreso",
                     idUsuario = 1
                 }
-                    };
+                };
 
-                    context.Tarea.AddRange(tareas);
-                    context.SaveChanges();
-                }
+                context.Tarea.AddRange(tareas);
+                context.SaveChanges();
             }
         }
-    }
-
+        }
 }
+    
+
+

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ToDoList.Context;
-using ToDoList.Context.TuProyecto.Data;
 using ToDoList.Interfaces;
 using ToDoList.Services;
 

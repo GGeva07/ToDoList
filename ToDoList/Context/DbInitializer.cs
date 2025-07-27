@@ -2,8 +2,6 @@
 
 namespace ToDoList.Context
 {
-    namespace TuProyecto.Data
-    {
         public static class DbInitializer
         {
             public static void Initialize(TodoListDBContext context)
@@ -61,4 +59,4 @@ namespace ToDoList.Context
         }
     }
 
-}
+

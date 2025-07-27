@@ -123,7 +123,7 @@ namespace ToDoList.Services
                 var tareaEliminar = await context.Tarea
     .FirstOrDefaultAsync(t => t.id == id);
                 var tarea = await context.Tarea.FirstOrDefaultAsync(T => T.idUsuario == tareaEliminar.idUsuario);
-                if (tarea == null || tareaEliminar == null ) return null;
+                if (tarea == null || tareaEliminar == null) return null;
 
                 context.Tarea.Remove(tarea);
                 await context.SaveChangesAsync();

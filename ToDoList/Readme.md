@@ -107,7 +107,8 @@ ToDoList/
 │   ├── Tarea.cs
 │   └── Login.cs
 ├── Context/             # Contexto de base de datos
-│   └── TodoListDBContext.cs
+│   ├── TodoListDBContext.cs
+│   └── DbInitializer.cs 
 ├── Services/            # Lógica de negocio
 ├── Interfaces/          # Contratos de servicios
 └── Program.cs           # Configuración principal

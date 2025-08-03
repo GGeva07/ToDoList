@@ -1,6 +1,6 @@
-﻿using ToDoList.Models;
+﻿using ToDoListAPI.Core.Domain.Entities;
 
-namespace ToDoList.Interfaces
+namespace ToDoListAPI.Core.Application.Interfaces
 {
     public interface ILogin
     {

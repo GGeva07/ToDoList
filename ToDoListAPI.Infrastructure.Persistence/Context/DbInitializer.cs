@@ -1,6 +1,6 @@
-﻿using ToDoList.Models;
+﻿using ToDoListAPI.Core.Domain.Entities;
 
-namespace ToDoList.Context
+namespace ToDoListAPI.Infrastructure.Persistence.Context
 {
         public static class DbInitializer
         {
@@ -9,26 +9,21 @@ namespace ToDoList.Context
 
             context.Database.EnsureCreated();
 
-
             if (context.Usuario.Any())
             {
-                return;
-
-
-
                 var usuarios = new Usuario[]
                 {
                 new Usuario
                 {
-                    usuarioNombre = "admin",
-                    correo = "admin@example.com",
-                    contrasenia = "admin123"
+                    UsuarioNombre = "admin",
+                    Correo = "admin@example.com",
+                    Contrasenia = "admin123"
                 },
                 new Usuario
                 {
-                    usuarioNombre = "usuario1",
-                    correo = "usuario1@example.com",
-                    contrasenia = "password123"
+                    UsuarioNombre = "usuario1",
+                    Correo = "usuario1@example.com",
+                    Contrasenia = "password123"
                 }
                 };
 
@@ -57,12 +52,10 @@ namespace ToDoList.Context
                 context.SaveChanges();
             }
         }
-<<<<<<< HEAD
+
         }
 }
-    
-=======
-    }
->>>>>>> f9fd53617b2ca6722f9a0be168a7581969f3f906
+
+
 
 

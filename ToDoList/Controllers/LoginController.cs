@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Interfaces;
 using ToDoList.Models;
+using ToDoListAPI.Core.Application.Interfaces;
 
 namespace ToDoList.Controllers
 {
@@ -39,9 +39,9 @@ namespace ToDoList.Controllers
                     errorCode = 200,
                     data = new
                     {
-                        id = usuario.id,
-                        usuarioNombre = usuario.usuarioNombre,
-                        correo = usuario.correo
+                        id = usuario.Id,
+                        usuarioNombre = usuario.UsuarioNombre,
+                        correo = usuario.Correo
                     }
                 });
             }
@@ -80,9 +80,9 @@ namespace ToDoList.Controllers
                     errorCode = 200,
                     data = new
                     {
-                        id = usuario.id,
-                        usuarioNombre = usuario.usuarioNombre,
-                        correo = usuario.correo
+                        id = usuario.Id,
+                        usuarioNombre = usuario.UsuarioNombre,
+                        correo = usuario.Correo
                     }
                 });
             }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Interfaces;
-using ToDoList.Models;
+using ToDoListAPI.Core.Application.Interfaces;
+using ToDoListAPI.Core.Domain.Entities;
 
 namespace ToDoList.Controllers
 {

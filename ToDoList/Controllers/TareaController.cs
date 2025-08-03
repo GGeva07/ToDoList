@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Interfaces;
-using ToDoList.Models;
+using ToDoListAPI.Core.Application.Interfaces;
+using ToDoListAPI.Core.Domain.Entities;
 
 namespace ToDoList.Controllers
 {
@@ -57,7 +57,7 @@ namespace ToDoList.Controllers
         {
             try
             {
-                var tarea = await service.GetTareaById(id);
+                var tarea = await service.GetById(id);
                 if (tarea == null)
                 {
                     return NotFound(new
@@ -211,10 +211,10 @@ namespace ToDoList.Controllers
                     });
                 }
 
-                model.id = id;
+                model.Id = id;
                 model.idUsuario = idUsuario;
 
-                var resultado = await service.Put(model);
+                var resultado = await service.Put(model.Id, model);
                 return Ok(new
                 {
                     success = true,
@@ -234,12 +234,12 @@ namespace ToDoList.Controllers
             }
         }
 
-        [HttpDelete("Delete-Tarea/{id}/{idUsuario}")]
-        public async Task<IActionResult> DeleteTarea(int id, int idUsuario)
+        [HttpDelete("Delete-Tarea/{id}")]
+        public async Task<IActionResult> DeleteTarea(int id)
         {
             try
             {
-                var resultado = await service.Delete(id, idUsuario);
+                var resultado = await service.Delete(id);
 
                 if (resultado == "Tarea eliminada")
                 {

@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using ToDoList.Context;
-using ToDoList.Interfaces;
-using ToDoList.Services;
+using ToDoListAPI.Infrastructure.Persistence;
+using ToDoListAPI.Core.Application;
+using ToDoListAPI.Infrastructure.Persistence.Context;
 
-namespace ToDoList.GUI
+namespace ToDoList
 {
     public class Program
     {
@@ -17,13 +17,8 @@ namespace ToDoList.GUI
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            builder.Services.AddSqlServer<TodoListDBContext>(
-                builder.Configuration.GetConnectionString("AppConnection"));
-
-            builder.Services.AddScoped<IUsuario, UsuarioService>();
-            builder.Services.AddScoped<ITarea, TareaService>();
-            builder.Services.AddScoped<ILogin, LoginService>();
+            builder.Services.ResgistrationPersistenceLayer(builder.Configuration);
+            builder.Services.RegistrationApplicationLayer();
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -54,7 +49,6 @@ namespace ToDoList.GUI
             });
 
             var app = builder.Build();
-
 
             using (var scope = app.Services.CreateScope())
             {

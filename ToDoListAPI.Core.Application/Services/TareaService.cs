@@ -1,29 +1,24 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using System.Threading;
-using ToDoList.Context;
-using ToDoList.Interfaces;
-using ToDoList.Models;
+﻿using ToDoListAPI.Core.Application.Interfaces;
+using ToDoListAPI.Core.Domain.Entities;
+using ToDoListAPI.Core.Domain.Interfaces;
 
-namespace ToDoList.Services
+namespace ToDoListAPI.Core.Application.Services
 {
     public class TareaService : ITarea
     {
-        private readonly TodoListDBContext context;
+        private readonly ITareaRepository _tareaRepository;
 
-        public TareaService(TodoListDBContext context)
+        public TareaService(ITareaRepository tareaRepository)
         {
-            this.context = context;
+            _tareaRepository = tareaRepository;
         }
-
-        public async Task<List<Tarea>> Get()
+        public async Task<List<Tarea>?> Get()
         {
             try
             {
-                var tarea = context.Tarea.ToListAsync();
+                var tarea = await _tareaRepository.GetAllAsync();
                 if (tarea == null) return null;
-                return await tarea;
+                return tarea.ToList();
             }catch(Exception e)
             {
                 Console.WriteLine($"Error {e.Message}");
@@ -31,11 +26,11 @@ namespace ToDoList.Services
             }
         }
 
-        public async Task<Object> GetTareaById(int id)
+        public async Task<object?> GetTareaById(int id)
         {
             try
             {
-                var tarea = await context.Tarea.FirstOrDefaultAsync(t => t.id == id);
+                var tarea = await _tareaRepository.GetByIdAsync(id);
                 if (tarea == null) return null;
 
                 return tarea;
@@ -50,9 +45,9 @@ namespace ToDoList.Services
         {
             try
             {
-                var Tareas = context.Tarea.Where(t => t.Nombre == Nombre).ToListAsync();
+                var Tareas = await _tareaRepository.GetAllAsync();
                 if (Tareas == null) return null;
-                return await Tareas;
+                return Tareas.Where(t => t.Nombre == Nombre).ToList();
             }
             catch(Exception e)
             {
@@ -61,14 +56,14 @@ namespace ToDoList.Services
             }
         }
 
-        public async Task<List<Tarea>> GetTareasByIdUsuario(int id)
+        public async Task<List<Tarea>?> GetTareasByIdUsuario(int id)
         {
             try
             {
+                var tarea = await _tareaRepository.GetAllAsync();
 
-                var tarea = context.Tarea.Where(t => t.idUsuario == id).ToListAsync();
                 if (tarea == null) return null;
-                return await tarea;
+                return tarea.Where(t => t.idUsuario == id).ToList();
             }
             catch (Exception e)
             {
@@ -81,16 +76,7 @@ namespace ToDoList.Services
         {
             try
             {
-                var usuario = await context.Usuario
-                    .FirstOrDefaultAsync(u => u.id == model.idUsuario);
-
-                Console.WriteLine(usuario);
-
-                if (usuario == null) return null;
-
-                await context.Tarea.AddAsync(model);
-                await context.SaveChangesAsync();
-
+                var usuario = model != null ? await _tareaRepository.AddAsync(model) : null;
                 return new { message = "Tarea creada", tarea = model }; 
             }
             catch (Exception e)
@@ -103,8 +89,7 @@ namespace ToDoList.Services
 
         public async Task<object> Put(Tarea model)
         {
-            var tarea = await context.Tarea
-                .FirstOrDefaultAsync(t => t.id == model.id && t.idUsuario == model.idUsuario);
+            var tarea = await _tareaRepository.GetByIdAsync(model.Id);
 
             if (tarea == null) return null;
 
@@ -112,7 +97,7 @@ namespace ToDoList.Services
             tarea.Contenido = model.Contenido;
             tarea.Estado = model.Estado;
 
-            await context.SaveChangesAsync();
+            await _tareaRepository.UpdateAsync(tarea);
             return new { message = "Tarea editada", tarea };
         }
 
@@ -120,13 +105,7 @@ namespace ToDoList.Services
         {
             try
             {
-                var tareaEliminar = await context.Tarea
-    .FirstOrDefaultAsync(t => t.id == id);
-                var tarea = await context.Tarea.FirstOrDefaultAsync(T => T.idUsuario == tareaEliminar.idUsuario);
-                if (tarea == null || tareaEliminar == null) return null;
-
-                context.Tarea.Remove(tarea);
-                await context.SaveChangesAsync();
+                var tareaEliminar = await _tareaRepository.DeleteAsync(id);
                 return new { message = "Tarea eliminada" };
             }
             catch (Exception e)
@@ -146,6 +125,26 @@ namespace ToDoList.Services
             {
                 return new { error = $"Error: {e.Message}" };
             }
+        }
+
+        public Task<Tarea> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> Put(int id, Tarea model)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<string?> ITarea.Post(Tarea model)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<string?> ITarea.Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

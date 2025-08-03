@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
+using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Interfaces;
 
 namespace ToDoList.Controllers

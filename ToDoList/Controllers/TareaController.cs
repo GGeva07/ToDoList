@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Interfaces;
 using ToDoListAPI.Core.Domain.Entities;
 
@@ -9,6 +10,19 @@ namespace ToDoList.Controllers
     public class TareaController : ControllerBase
     {
         private readonly ITarea service;
+        Func<Tarea, TareaDto> TareaToTareaDto = delegate (Tarea model)
+        {
+            var tarea = new TareaDto
+            {
+                Id = model.Id,
+                idUsuario = model.idUsuario,
+                Estado = model.Estado,
+                Tipo = model.Tipo,
+                Nombre = model.Nombre,
+                Contenido = model.Contenido,
+            };
+            return tarea;
+        };
 
         public TareaController(ITarea service)
         {
@@ -176,7 +190,7 @@ namespace ToDoList.Controllers
                     });
                 }
 
-                var resultado = await service.Post(model);
+                var resultado = await service.Post(TareaToTareaDto(model));
                 return Ok(new
                 {
                     success = true,
@@ -214,7 +228,7 @@ namespace ToDoList.Controllers
                 model.Id = id;
                 model.idUsuario = idUsuario;
 
-                var resultado = await service.Put(model.Id, model);
+                var resultado = await service.Put(TareaToTareaDto(model));
                 return Ok(new
                 {
                     success = true,

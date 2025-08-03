@@ -1,4 +1,6 @@
-﻿using ToDoListAPI.Core.Application.Fabricas;
+﻿using System.Reflection;
+using ToDoListAPI.Core.Application.DTos;
+using ToDoListAPI.Core.Application.Fabricas;
 using ToDoListAPI.Core.Application.Interfaces;
 using ToDoListAPI.Core.Domain.Entities;
 using ToDoListAPI.Core.Domain.Enum;
@@ -10,6 +12,19 @@ namespace ToDoListAPI.Core.Application.Services
     {
         private readonly ITareaRepository _tareaRepository;
         private readonly IFabricaTareas _fabrica;
+        Func<TareaDto, Tarea> TareaDtoToTarea = delegate (TareaDto model)
+        {
+           var tarea = new Tarea
+            {
+                Id = model.Id,
+                idUsuario = model.idUsuario,
+                Estado = model.Estado,
+                Tipo = model.Tipo,
+                Nombre = model.Nombre,
+                Contenido = model.Contenido,
+            };
+            return tarea;
+        };
 
         public TareaService(ITareaRepository tareaRepository, IFabricaTareas fabrica)
         {
@@ -85,12 +100,12 @@ namespace ToDoListAPI.Core.Application.Services
             }
         }
 
-        public async Task<string?> Post(Tarea model)
+        public async Task<string?> Post(TareaDto model)
         {
             try
             {
                 model.Estado = EstadoTarea.PENDENGTING;
-                var tarea = _fabrica.OctenerTareaFactory(model);
+                var tarea = _fabrica.OctenerTareaFactory(TareaDtoToTarea(model));
                 var content = await _tareaRepository.AddAsync(tarea);
                 return content != null ? $"Tarea de typo: {tarea.GetTaskType()} Creada Correctamente" : "no se a podido crear la tarea";
             }
@@ -100,7 +115,7 @@ namespace ToDoListAPI.Core.Application.Services
             }
         }
 
-        public async Task<string?> Put(Tarea model)
+        public async Task<string?> Put(TareaDto model)
         {
             try
             {

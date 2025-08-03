@@ -1,4 +1,4 @@
-﻿namespace ToDoList.Models
+﻿namespace ToDoListAPI.Core.Application.DTos
 {
     public class Login
     {

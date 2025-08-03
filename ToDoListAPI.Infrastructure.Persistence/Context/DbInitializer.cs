@@ -1,4 +1,5 @@
 ﻿using ToDoListAPI.Core.Domain.Entities;
+using ToDoListAPI.Core.Domain.Enum;
 
 namespace ToDoListAPI.Infrastructure.Persistence.Context
 {
@@ -36,14 +37,14 @@ namespace ToDoListAPI.Infrastructure.Persistence.Context
                 {
                     Nombre = "Primera tarea",
                     Contenido = "Descripción de la primera tarea",
-                    Estado = "Pendiente",
+                    Estado = EstadoTarea.PENDENGTING,
                     idUsuario = 1
                 },
                 new Tarea
                 {
                     Nombre = "Segunda tarea",
                     Contenido = "Descripción de la segunda tarea",
-                    Estado = "En Progreso",
+                    Estado = EstadoTarea.INPROGRES,
                     idUsuario = 1
                 }
                 };

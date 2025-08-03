@@ -1,4 +1,5 @@
 ﻿using ToDoListAPI.Core.Domain.Common;
+using ToDoListAPI.Core.Domain.Enum;
 
 namespace ToDoListAPI.Core.Domain.Entities
 {
@@ -7,7 +8,8 @@ namespace ToDoListAPI.Core.Domain.Entities
         public string Nombre { get; set; }
         public string  Contenido { get; set; }
 
-        public string Estado { get; set; }
+        public EstadoTarea Estado { get; set; }
+        public TipoTarea Tipo { get; set; }
 
         public int idUsuario { get; set; }
     }

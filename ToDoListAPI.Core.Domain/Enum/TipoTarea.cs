@@ -2,6 +2,8 @@
 {
     public enum TipoTarea
     {
-        LIMPIEZAGENEARAL = 1
+        PRACTICA = 1,
+        ASIGNACION,
+        CUESTIONARIO
     }
 }

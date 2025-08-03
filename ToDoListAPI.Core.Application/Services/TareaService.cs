@@ -1,5 +1,7 @@
-﻿using ToDoListAPI.Core.Application.Interfaces;
+﻿using ToDoListAPI.Core.Application.Fabricas;
+using ToDoListAPI.Core.Application.Interfaces;
 using ToDoListAPI.Core.Domain.Entities;
+using ToDoListAPI.Core.Domain.Enum;
 using ToDoListAPI.Core.Domain.Interfaces;
 
 namespace ToDoListAPI.Core.Application.Services
@@ -7,144 +9,117 @@ namespace ToDoListAPI.Core.Application.Services
     public class TareaService : ITarea
     {
         private readonly ITareaRepository _tareaRepository;
+        private readonly IFabricaTareas _fabrica;
 
-        public TareaService(ITareaRepository tareaRepository)
+        public TareaService(ITareaRepository tareaRepository, IFabricaTareas fabrica)
         {
             _tareaRepository = tareaRepository;
+            _fabrica = fabrica;
         }
-        public async Task<List<Tarea>?> Get()
+
+        public async Task<string?> Delete(int id)
         {
             try
             {
-                var tarea = await _tareaRepository.GetAllAsync();
-                if (tarea == null) return null;
-                return tarea.ToList();
-            }catch(Exception e)
+                var content = await _tareaRepository.DeleteAsync(id);
+                return content != null ? "Tarea eliminada correctamente" : "La tarea a eliminar no fue encontrada";
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error {e.Message}");
-                return new List<Tarea>();
+                return $"Error al Eliminar la Tarea: {ex.Message}";
             }
         }
 
-        public async Task<object?> GetTareaById(int id)
+        public async Task<List<Tarea>> Get()
+        {
+            try
+            {
+                var tareas = await _tareaRepository.GetAllAsync();
+                return tareas.Any() ? [.. tareas] : [];
+            }
+            catch (Exception)
+            {
+                return [];
+            }
+        }
+
+        public async Task<Tarea?> GetById(int id)
         {
             try
             {
                 var tarea = await _tareaRepository.GetByIdAsync(id);
-                if (tarea == null) return null;
-
-                return tarea;
+                return tarea ?? new();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return new { error = $"Error: {e.Message}" };
+                return new();
             }
         }
 
-        public async Task<List<Tarea>> GetTareasByNombre(string Nombre)
+        public async Task<List<Tarea>?> GetTareasByIdUsuario(int idUsuario)
         {
             try
             {
-                var Tareas = await _tareaRepository.GetAllAsync();
-                if (Tareas == null) return null;
-                return Tareas.Where(t => t.Nombre == Nombre).ToList();
+                var tareas = await _tareaRepository.GetAllAsync();
+                var taresByUsuario = tareas.Where(t => t.idUsuario == idUsuario).ToList();
+
+                return taresByUsuario.Count != 0 ? taresByUsuario : [];
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                Console.WriteLine($"Error {e.Message}");
-                return new List<Tarea>();
+                return [];
             }
         }
 
-        public async Task<List<Tarea>?> GetTareasByIdUsuario(int id)
+        public async Task<List<Tarea>?> GetTareasByNombre(string Nombre)
         {
             try
             {
-                var tarea = await _tareaRepository.GetAllAsync();
-
-                if (tarea == null) return null;
-                return tarea.Where(t => t.idUsuario == id).ToList();
+                var tareas = await _tareaRepository.GetAllAsync();
+                var tareasByNombre = tareas.Where(t => t.Nombre == Nombre).ToList();
+                return tareasByNombre.Count != 0 ? tareasByNombre : [];
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine($"Error {e.Message}");
-                return new List<Tarea>();
+                return [];
             }
         }
 
-        public async Task<object> Post(Tarea model)
+        public async Task<string?> Post(Tarea model)
         {
             try
             {
-                var usuario = model != null ? await _tareaRepository.AddAsync(model) : null;
-                return new { message = "Tarea creada", tarea = model }; 
+                model.Estado = EstadoTarea.PENDENGTING;
+                var tarea = _fabrica.OctenerTareaFactory(model);
+                var content = await _tareaRepository.AddAsync(tarea);
+                return content != null ? $"Tarea de typo: {tarea.GetTaskType()} Creada Correctamente" : "no se a podido crear la tarea";
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new { error = $"Error: {e.Message}" }; 
+                return $"Error al crear la Tarea: {ex.Message}";
             }
         }
 
-
-
-        public async Task<object> Put(Tarea model)
-        {
-            var tarea = await _tareaRepository.GetByIdAsync(model.Id);
-
-            if (tarea == null) return null;
-
-            tarea.Nombre = model.Nombre;
-            tarea.Contenido = model.Contenido;
-            tarea.Estado = model.Estado;
-
-            await _tareaRepository.UpdateAsync(tarea);
-            return new { message = "Tarea editada", tarea };
-        }
-
-        public async Task<object> Delete(int id)
+        public async Task<string?> Put(Tarea model)
         {
             try
             {
-                var tareaEliminar = await _tareaRepository.DeleteAsync(id);
-                return new { message = "Tarea eliminada" };
+                var tarea = await _tareaRepository.GetByIdAsync(model.Id);
+
+                tarea.idUsuario = model.idUsuario;
+                tarea.Estado = model.Estado;
+                tarea.Tipo = model.Tipo;
+                tarea.Nombre = model.Nombre;
+                tarea.Contenido = model.Contenido;
+
+                var content = await _tareaRepository.UpdateAsync(tarea);
+
+                return content != null ? "Tarea Acutalizada correctamente" : "No se encontro una tarea con este id";
             }
-            catch (Exception e)
+            catch(Exception ex)
             {
-                return new { error = $"Error: {e.Message}" };
+                return $"Error al Actualizar la Tarea: {ex.Message}";
             }
-        }
-
-        public async Task<object> Delete(int id, int idUsuario)
-        {
-            try
-            {
-                await Delete(id);
-                return new { message = "Tarea eliminada"};
-            }
-            catch (Exception e)
-            {
-                return new { error = $"Error: {e.Message}" };
-            }
-        }
-
-        public Task<Tarea> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> Put(int id, Tarea model)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<string?> ITarea.Post(Tarea model)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<string?> ITarea.Delete(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -30,6 +30,14 @@ namespace ToDoListAPI.Infrastructure.Persistence.Repository
             return entry!;
         }
 
+        public async Task<ICollection<T>> DeleteRangeAsync(T[] entities)
+        {
+            context.RemoveRange(entities);
+            await context.SaveChangesAsync();
+            return entities;
+            
+        }
+
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             var entities = await context.Set<T>().ToListAsync();

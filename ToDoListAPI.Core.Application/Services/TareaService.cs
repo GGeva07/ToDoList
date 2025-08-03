@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading;
 using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Fabricas;
 using ToDoListAPI.Core.Application.Interfaces;
@@ -12,12 +13,12 @@ namespace ToDoListAPI.Core.Application.Services
     {
         private readonly ITareaRepository _tareaRepository;
         private readonly IFabricaTareas _fabrica;
+
         Func<TareaDto, Tarea> TareaDtoToTarea = delegate (TareaDto model)
         {
            var tarea = new Tarea
             {
                 Id = model.Id,
-                idUsuario = model.idUsuario,
                 Estado = model.Estado,
                 Tipo = model.Tipo,
                 Nombre = model.Nombre,
@@ -31,20 +32,6 @@ namespace ToDoListAPI.Core.Application.Services
             _tareaRepository = tareaRepository;
             _fabrica = fabrica;
         }
-
-        public async Task<string?> Delete(int id)
-        {
-            try
-            {
-                var content = await _tareaRepository.DeleteAsync(id);
-                return content != null ? "Tarea eliminada correctamente" : "La tarea a eliminar no fue encontrada";
-            }
-            catch (Exception ex)
-            {
-                return $"Error al Eliminar la Tarea: {ex.Message}";
-            }
-        }
-
         public async Task<List<Tarea>> Get()
         {
             try
@@ -71,20 +58,20 @@ namespace ToDoListAPI.Core.Application.Services
             }
         }
 
-        public async Task<List<Tarea>?> GetTareasByIdUsuario(int idUsuario)
-        {
-            try
-            {
-                var tareas = await _tareaRepository.GetAllAsync();
-                var taresByUsuario = tareas.Where(t => t.idUsuario == idUsuario).ToList();
+        //public async Task<List<Tarea>?> GetTareasByIdUsuario(int idUsuario)
+        //{
+        //    try
+        //    {
+        //        var tareas = await _tareaRepository.GetAllAsync();
+        //        var taresByUsuario = tareas.Where(t => t.idUsuario == idUsuario).ToList();
 
-                return taresByUsuario.Count != 0 ? taresByUsuario : [];
-            }
-            catch(Exception)
-            {
-                return [];
-            }
-        }
+        //        return taresByUsuario.Count != 0 ? taresByUsuario : [];
+        //    }
+        //    catch(Exception)
+        //    {
+        //        return [];
+        //    }
+        //}
 
         public async Task<List<Tarea>?> GetTareasByNombre(string Nombre)
         {
@@ -121,7 +108,6 @@ namespace ToDoListAPI.Core.Application.Services
             {
                 var tarea = await _tareaRepository.GetByIdAsync(model.Id);
 
-                tarea.idUsuario = model.idUsuario;
                 tarea.Estado = model.Estado;
                 tarea.Tipo = model.Tipo;
                 tarea.Nombre = model.Nombre;
@@ -134,6 +120,35 @@ namespace ToDoListAPI.Core.Application.Services
             catch(Exception ex)
             {
                 return $"Error al Actualizar la Tarea: {ex.Message}";
+            }
+        }
+        public async Task<string?> Delete(int id)
+        {
+            try
+            {
+                var content = await _tareaRepository.DeleteAsync(id);
+                return content != null ? "Tarea eliminada correctamente" : "La tarea a eliminar no fue encontrada";
+            }
+            catch (Exception ex)
+            {
+                return $"Error al Eliminar la Tarea: {ex.Message}";
+            }
+        }
+        public async Task<string?> Delete(int[] ids)
+        {
+            try
+            {
+                List<Tarea> tareas = [];
+                foreach (var id in ids)
+                {
+                    tareas.Add(await _tareaRepository.GetByIdAsync(id));
+                }
+                var content = await _tareaRepository.DeleteRangeAsync([.. tareas]);
+                return content.Count != 0 ? "Tareas eliminadas correctamente" : "No se encontraron las tareas a eliminar";
+            }
+            catch (Exception ex)
+            {
+                return $"Error al Eliminar las Tareas: {ex.Message}";
             }
         }
     }

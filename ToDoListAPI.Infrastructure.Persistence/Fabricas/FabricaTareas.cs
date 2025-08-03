@@ -17,7 +17,6 @@ namespace ToDoListAPI.Infrastructure.Persistence.Fabricas
                 _ => throw new ArgumentException("Tipo De Tarea No existente")
             };
 
-            tipoTarea.idUsuario = tarea.idUsuario;
             tipoTarea.Estado = tarea.Estado;
             tipoTarea.Tipo = tarea.Tipo;
             tipoTarea.Nombre = tarea.Nombre;

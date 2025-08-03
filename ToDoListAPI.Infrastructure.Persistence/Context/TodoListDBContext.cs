@@ -10,7 +10,7 @@ namespace ToDoListAPI.Infrastructure.Persistence.Context
         {
         }
 
-        public DbSet<Usuario> Usuario { get; set; }
+        //public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Tarea> Tarea { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -11,6 +11,5 @@ namespace ToDoListAPI.Core.Domain.Entities
         public EstadoTarea Estado { get; set; }
         public TipoTarea Tipo { get; set; }
 
-        public int idUsuario { get; set; }
     }
 }

@@ -17,23 +17,23 @@ namespace ToDoListAPI.Core.Application.Services
         {
             try
             {
-                var users = await _usuarioRepository.GetAllAsync();
-                var user = users.FirstOrDefault(u => u.UsuarioNombre == usuarioNombre && u.Correo == correo);
+                var usuarios = await _usuarioRepository.GetAllAsync();
+                var usuario = usuarios.FirstOrDefault(u => u.Correo == correo && u.UsuarioNombre == usuarioNombre);
 
-                if (user != null)
+                if (usuario == null)
                 {
-                    Console.WriteLine("Usuario o Correo en uso");
+                    Console.WriteLine("Usuario no existente");
                     return null!;
                 }
 
-                var usuario = new Usuario
+                var NuevoUsuario = new Usuario
                 {
                     UsuarioNombre = usuarioNombre,
                     Correo = correo,
                     Contrasenia = contrasenia
                 };
 
-                await _usuarioRepository.AddAsync(usuario);
+                await _usuarioRepository.AddAsync(NuevoUsuario);
                 return usuario;
             }
             catch (Exception e)

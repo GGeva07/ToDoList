@@ -15,12 +15,6 @@ namespace ToDoListAPI.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("Tareas");
             builder.HasKey(e => e.Id);
-
-
-            builder.HasOne<Usuario>()
-                .WithMany()
-                .HasForeignKey(t => t.idUsuario)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

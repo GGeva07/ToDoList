@@ -10,7 +10,8 @@ namespace ToDoListAPI.Core.Application.Interfaces
         public Task<string?> Post(TareaDto model);
         public Task<string?> Put(TareaDto model);
         public Task<string?> Delete(int id);
+        public Task<string?> Delete(int[] ids);
         public Task<List<Tarea>?> GetTareasByNombre(string Nombre);
-        public Task<List<Tarea>?> GetTareasByIdUsuario(int idUsuario);
+        //public Task<List<Tarea>?> GetTareasByIdUsuario(int idUsuario);
     }
 }

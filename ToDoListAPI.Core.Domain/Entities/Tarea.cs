@@ -10,6 +10,7 @@ namespace ToDoListAPI.Core.Domain.Entities
 
         public EstadoTarea Estado { get; set; }
         public TipoTarea Tipo { get; set; }
+        public PrioridadTarea Prioridad { get; set; }
 
     }
 }

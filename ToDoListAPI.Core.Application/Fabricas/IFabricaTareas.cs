@@ -5,6 +5,6 @@ namespace ToDoListAPI.Core.Application.Fabricas
 {
     public interface IFabricaTareas
     {
-        TareaBase OctenerTareaFactory(Tarea tarea);
+        TareaBase ObtenerTareaFactory(Tarea tarea);
     }
 }

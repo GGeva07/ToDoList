@@ -1,56 +1,63 @@
-﻿# ToDoList API
+ToDoList API
 
-Una API REST desarrollada en ASP.NET Core para la gestión de tareas y usuarios, con autenticación JWT y Entity Framework Core.
+Una API REST desarrollada en **ASP.NET Core 8.0** para la gestión de tareas y usuarios, con autenticación **JWT** y **Entity Framework Core**.
 
-## Propósito
 
 Esta API permite:
-- Gestionar usuarios (registro, login, CRUD)
-- Administrar tareas por usuario
-- Autenticación y autorización con JWT
-- Operaciones CRUD completas para tareas y usuarios
 
-## Características
+* Gestionar usuarios (registro, login, CRUD).
+* Administrar tareas por usuario.
+* Autenticación y autorización con JWT.
+* Operaciones CRUD completas para tareas y usuarios.
 
-- **Autenticación JWT**: Sistema seguro de autenticación
-- **Entity Framework Core**: ORM para manejo de base de datos
-- **Code First**: Migraciones automáticas de base de datos
-- **Swagger UI**: Documentación interactiva de la API
-- **Respuestas estandarizadas**: Formato JSON consistente
-- **SQL Server**: Base de datos principal
 
-## Tecnologías Utilizadas
 
-- ASP.NET Core 8.0
-- Entity Framework Core
-- SQL Server / SQL Server Express
-- JWT (JSON Web Tokens)
-- Swagger/OpenAPI
-- Dependency Injection
+Características
 
-## Configuración
+* **Autenticación JWT**: Sistema seguro de autenticación.
+* **Entity Framework Core**: ORM para manejo de base de datos.
+* **Code First**: Migraciones automáticas de base de datos.
+* **Swagger UI**: Documentación interactiva de la API.
+* **Respuestas estandarizadas**: Formato JSON consistente.
+* **SQL Server**: Base de datos principal.
 
-### Prerrequisitos
+---
 
-- .NET 8.0 SDK
-- SQL Server o SQL Server Express
-- Visual Studio 2022 o VS Code
+Tecnologías Utilizadas
 
-### Instalación
+* **ASP.NET Core 8.0**
+* **Entity Framework Core**
+* **SQL Server / SQL Server Express**
+* **JWT (JSON Web Tokens)**
+* **Swagger/OpenAPI**
+* **Dependency Injection**
 
-1. **Clonar el repositorio**
+Configuración
+
+Prerrequisitos
+
+* .NET 8.0 SDK
+* SQL Server o SQL Server Express
+* Visual Studio 2022 o VS Code
+
+Instalación
+
+1. Clonar el repositorio:
+
    ```bash
    git clone <tu-repositorio>
    cd ToDoList.API
    ```
 
-2. **Instalar paquetes NuGet**
+2. Instalar paquetes NuGet:
+
    ```bash
    dotnet restore
    ```
-   
-   O usando Package Manager Console:
-   ```powershell
+
+**Package Manager Console**:
+
+   ```bash
    Install-Package Microsoft.EntityFrameworkCore.SqlServer
    Install-Package Microsoft.EntityFrameworkCore.Tools
    Install-Package Microsoft.EntityFrameworkCore.Design
@@ -58,9 +65,8 @@ Esta API permite:
    Install-Package Microsoft.AspNetCore.Authentication.JwtBearer
    ```
 
-3. **Configurar la cadena de conexión**
-   
-   Edita `appsettings.json`:
+3. Configurar la cadena de conexión en `appsettings.json`:
+
    ```json
    {
      "ConnectionStrings": {
@@ -74,101 +80,62 @@ Esta API permite:
    }
    ```
 
-4. **Crear la migración inicial**
-   ```bash
-   dotnet ef migrations add InitialCreate
-   ```
+La aplicación iniciará en:
+[https://localhost:5005](https://localhost:5005)
+[http://localhost:5262](http://localhost:5262)
 
-5. **Ejecutar la aplicación**
-   ```bash
-   dotnet run
-   ```
 
-   La aplicación iniciará en `https://localhost:5005` o `http://localhost:5262`
 
 ## Base de Datos
 
-La aplicación utiliza **Code First** approach y creará automáticamente:
+La aplicación utiliza **Code First approach** y generará automáticamente las tablas:
 
-### Tablas
-- **Usuarios**: Información de usuarios registrados
-- **Tareas**: Tareas asociadas a usuarios
+* **Usuarios** → Información de usuarios registrados.
+* **Tareas** → Tareas asociadas a usuarios.
 
 ## Estructura del Proyecto
 
+```plaintext
+📂 ToDoList/
+├── 📂 src/                          # Código fuente principal
+│   ├── 📂 core/                     # Núcleo de la aplicación
+│   │   ├── 📂 ToDoListAPI.Core.Application   # Lógica de aplicación
+│   │   │   ├── 📂 DTOs
+│   │   │   ├── 📂 Fabricas
+│   │   │   ├── 📂 Interfaces
+│   │   │   ├── 📂 Services
+|   |   |   |   └── 📂 Cache
+|   |   |   |
+│   │   │   └── ServiceRegistration.cs
+│   │   ├── 📂 ToDoListAPI.Core.Domain        # Entidades de dominio
+│   │   │   ├── 📂 Common
+│   │   │   ├── 📂 Entities
+│   │   │   ├── 📂 Enum
+│   │   │   └── 📂 Interfaces
+│
+│   ├── 📂 Infrastructure/           # Persistencia e infraestructura
+│   │   ├── 📂 ToDoListAPI.Infrastructure.Persistence
+│   │   │   ├── 📂 Configurations
+│   │   │   ├── 📂 Context
+│   │   │   ├── 📂 Fabricas
+│   │   │   ├── 📂 Migrations
+│   │   │   ├── 📂 Repository
+│   │   │   └── ServiceRegistration.cs
+│
+│   ├── 📂 Presentation/             # Capa de presentación (Web API)
+│   │   ├── 📂 Web
+│   │   │   ├── 📂 Controllers       # Controladores de la API
+│   │   │   ├── appsettings.json     # Configuración de la app
+│   │   │   ├── Program.cs           # Punto de entrada
+│   │   │   └── ...
+│
+└── 📄 README.md                     # Documentación principal del proyecto
+
 ```
-ToDoList/
-├── Controllers/          # Controladores de la API
-│   ├── LoginController.cs
-│   ├── UsuarioController.cs
-│   └── TareaController.cs
-├── Models/              # Modelos de datos
-│   ├── Usuario.cs
-│   ├── Tarea.cs
-│   └── Login.cs
-├── Context/             # Contexto de base de datos
-│   ├── TodoListDBContext.cs
-│   └── DbInitializer.cs 
-├── Services/            # Lógica de negocio
-├── Interfaces/          # Contratos de servicios
-└── Program.cs           # Configuración principal
-```
+Formato de Respuesta
 
-## Cómo Probar la API
+✅ Éxito:
 
-### 1. Swagger UI
-
-Acceder a: `https://localhost:5005/swagger`
-
-### 2. Endpoints Principales
-
-#### Autenticación
-```http
-POST /api/Login/Login
-Content-Type: application/json
-
-{
-  "usuarioNombre": "admin",
-  "Correo": "admin@example.com",
-  "Contrasenia": "admin123"
-}
-```
-
-#### Registro
-```http
-POST /api/Login/Sign-In
-Content-Type: application/json
-
-{
-  "usuarioNombre": "nuevoUsuario",
-  "Correo": "nuevo@email.com",
-  "Contrasenia": "password123"
-}
-```
-
-#### Obtener Tareas
-```http
-GET /api/Tarea/Get-Tareas
-```
-
-#### Crear Tarea
-```http
-POST /api/Tarea/Post-Tarea
-Content-Type: application/json
-
-{
-  "Nombre": "Mi nueva tarea",
-  "Contenido": "Descripción de la tarea",
-  "Estado": "Pendiente",
-  "idUsuario": 1
-}
-```
-
-### 3. Formato de Respuesta
-
-Todas las respuestas siguen este formato estándar:
-
-**Éxito:**
 ```json
 {
   "success": true,
@@ -178,7 +145,8 @@ Todas las respuestas siguen este formato estándar:
 }
 ```
 
-**Error:**
+❌ Error:
+
 ```json
 {
   "success": false,
@@ -187,11 +155,13 @@ Todas las respuestas siguen este formato estándar:
 }
 ```
 
-### 4. Códigos de Estado HTTP
+---
 
-- `200` - OK: Operación exitosa
-- `400` - Bad Request: Datos inválidos
-- `401` - Unauthorized: Credenciales incorrectas
-- `404` - Not Found: Recurso no encontrado
-- `500` - Internal Server Error: Error del servidor
+Códigos de Estado HTTP
+
+* **200 - OK** → Operación exitosa
+* **400 - Bad Request** → Datos inválidos
+* **401 - Unauthorized** → Credenciales incorrectas
+* **404 - Not Found** → Recurso no encontrado
+* **500 - Internal Server Error** → Error del servidor
 

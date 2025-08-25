@@ -183,6 +183,7 @@ namespace ToDoListAPI.Core.Application.Services
                 tarea.Tipo = model.Tipo;
                 tarea.Nombre = model.Nombre;
                 tarea.Contenido = model.Contenido;
+                _cache.set(model.Id, tarea);
 
                 // Actualizar cache
                 _cache.set(model.Id, tarea);

@@ -7,7 +7,7 @@ namespace ToDoListAPI.Infrastructure.Persistence.Fabricas
 {
     public class FabricaTareas : IFabricaTareas
     {
-        public TareaBase OctenerTareaFactory(Tarea tarea)
+        public TareaBase ObtenerTareaFactory(Tarea tarea)
         {
             TareaBase tipoTarea = tarea.Tipo switch
             {
@@ -21,6 +21,8 @@ namespace ToDoListAPI.Infrastructure.Persistence.Fabricas
             tipoTarea.Tipo = tarea.Tipo;
             tipoTarea.Nombre = tarea.Nombre;
             tipoTarea.Contenido = tarea.Contenido;
+            tipoTarea.SetPriorityByType(tarea);
+            tipoTarea.Prioridad = tarea.Prioridad;
 
             return tipoTarea;
         }

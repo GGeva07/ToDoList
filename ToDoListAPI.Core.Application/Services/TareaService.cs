@@ -101,7 +101,8 @@ namespace ToDoListAPI.Core.Application.Services
             try
             {
                 model.Estado = EstadoTarea.PENDENGTING;
-                var tarea = _fabrica.OctenerTareaFactory(TareaDtoToTarea(model));
+                var tarea = _fabrica.ObtenerTareaFactory(TareaDtoToTarea(model));
+
                 var content = await _tareaRepository.AddAsync(tarea);
                 return content != null ? $"Tarea de typo: {tarea.GetTaskType()} Creada Correctamente" : "no se a podido crear la tarea";
             }
@@ -116,13 +117,13 @@ namespace ToDoListAPI.Core.Application.Services
             try
             {
                 var tarea = await _tareaRepository.GetByIdAsync(model.Id);
-
+                
                 tarea.Estado = model.Estado;
                 tarea.Tipo = model.Tipo;
                 tarea.Nombre = model.Nombre;
                 tarea.Contenido = model.Contenido;
-
                 _cache.set(model.Id, tarea);
+
                 var content = await _tareaRepository.UpdateAsync(tarea);
 
                 return content != null ? "Tarea Acutalizada correctamente" : "No se encontro una tarea con este id";

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Interfaces;
-using ToDoListAPI.Core.Domain.Entities;
 
 namespace ToDoList.Controllers
 {
@@ -10,7 +9,7 @@ namespace ToDoList.Controllers
     public class TareaController : ControllerBase
     {
         private readonly ITarea service;
-
+        
         public TareaController(ITarea service)
         {
             this.service = service;

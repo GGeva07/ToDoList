@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Threading;
+using ToDoListAPI.Core.Application.Cache;
 using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Fabricas;
 using ToDoListAPI.Core.Application.Interfaces;
@@ -13,6 +14,7 @@ namespace ToDoListAPI.Core.Application.Services
     {
         private readonly ITareaRepository _tareaRepository;
         private readonly IFabricaTareas _fabrica;
+        private Cache<int, Tarea> _cache = new();
 
         Func<TareaDto, Tarea> TareaDtoToTarea = delegate (TareaDto model)
         {
@@ -49,7 +51,14 @@ namespace ToDoListAPI.Core.Application.Services
         {
             try
             {
+                if (_cache.getValue(id, out var data))
+                {
+                    return data;
+                }
+
                 var tarea = await _tareaRepository.GetByIdAsync(id);
+                _cache.set(id, tarea);
+
                 return tarea ?? new();
             }
             catch (Exception)
@@ -113,7 +122,8 @@ namespace ToDoListAPI.Core.Application.Services
                 tarea.Tipo = model.Tipo;
                 tarea.Nombre = model.Nombre;
                 tarea.Contenido = model.Contenido;
-                
+                _cache.set(model.Id, tarea);
+
                 var content = await _tareaRepository.UpdateAsync(tarea);
 
                 return content != null ? "Tarea Acutalizada correctamente" : "No se encontro una tarea con este id";
@@ -128,6 +138,7 @@ namespace ToDoListAPI.Core.Application.Services
             try
             {
                 var content = await _tareaRepository.DeleteAsync(id);
+                _cache.remove(id);
                 return content != null ? "Tarea eliminada correctamente" : "La tarea a eliminar no fue encontrada";
             }
             catch (Exception ex)

@@ -1,17 +1,23 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToDoList.Services;
+using ToDoListAPI.Core.Application.Memo;
 using ToDoListAPI.Core.Application.Interfaces;
 using ToDoListAPI.Core.Application.Services;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ToDoListAPI.Core.Application
 {
     public static class ServiceRegistration
     {
-        public static void RegistrationApplicationLayer(this IServiceCollection service)
+        public static void RegistrationApplicationLayer(this IServiceCollection services)
         {
-            service.AddTransient<ITarea, TareaService>();
-            service.AddTransient<ILogin, LoginService>();
-            service.AddTransient<IUsuario, UsuarioService>();
+            services.AddScoped<ITarea, TareaService>();
+            services.AddTransient<ILogin, LoginService>();
+            services.AddTransient<IUsuario, UsuarioService>();
+            services.AddMemoryCache();
+            services.AddScoped(typeof(Cache<,>));
         }
     }
 }

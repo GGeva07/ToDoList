@@ -5,6 +5,7 @@ using System.Text;
 using ToDoListAPI.Infrastructure.Persistence;
 using ToDoListAPI.Core.Application;
 using ToDoListAPI.Infrastructure.Persistence.Context;
+using ToDoListAPI.Core.Application.Memo;
 
 namespace ToDoList
 {
@@ -19,6 +20,7 @@ namespace ToDoList
             builder.Services.AddSwaggerGen();
             builder.Services.ResgistrationPersistenceLayer(builder.Configuration);
             builder.Services.RegistrationApplicationLayer();
+            
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

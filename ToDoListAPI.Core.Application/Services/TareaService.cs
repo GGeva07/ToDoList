@@ -1,10 +1,10 @@
-﻿using ToDoListAPI.Core.Application.Memo;
-using ToDoListAPI.Core.Application.DTos;
+﻿using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Fabricas;
 using ToDoListAPI.Core.Application.Interfaces;
 using ToDoListAPI.Core.Domain.Entities;
 using ToDoListAPI.Core.Domain.Enum;
 using ToDoListAPI.Core.Domain.Interfaces;
+using ToDoListAPI.Core.Application.Services.Cache;
 
 namespace ToDoListAPI.Core.Application.Services
 {
@@ -146,7 +146,7 @@ namespace ToDoListAPI.Core.Application.Services
                 model.Estado = EstadoTarea.PENDENGTING;
 
                 // Crear tarea usando factory pattern
-                var tarea = _fabrica.OctenerTareaFactory(TareaDtoToTarea(model));
+                var tarea = _fabrica.ObtenerTareaFactory(TareaDtoToTarea(model));
 
                 // Persistir en base de datos
                 var content = await _tareaRepository.AddAsync(tarea);

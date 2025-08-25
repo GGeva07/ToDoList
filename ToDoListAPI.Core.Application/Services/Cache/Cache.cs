@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
-using ToDoListAPI.Core.Application.Memo;
+using ToDoListAPI.Core.Application.Services.Cache;
 
-namespace ToDoListAPI.Core.Application.Memo
+namespace ToDoListAPI.Core.Application.Services.Cache
 {
     public class Cache<TKey, TValue>
     {

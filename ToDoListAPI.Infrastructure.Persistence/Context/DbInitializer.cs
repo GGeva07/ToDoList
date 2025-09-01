@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using ToDoListAPI.Core.Domain.Entities;
+﻿using ToDoListAPI.Core.Domain.Entities;
 using ToDoListAPI.Core.Domain.Enum;
 
 namespace ToDoListAPI.Infrastructure.Persistence.Context
@@ -12,31 +10,31 @@ namespace ToDoListAPI.Infrastructure.Persistence.Context
 
             context.Database.EnsureCreated();
 
-            //if (context.Usuario.Any())
-            //{
-            //    var usuarios = new Usuario[]
-            //    {
-            //    new Usuario
-            //    {
-            //        UsuarioNombre = "admin",
-            //        Correo = "admin@example.com",
-            //        Contrasenia = "admin123"
-            //    },
-            //    new Usuario
-            //    {
-            //        UsuarioNombre = "usuario1",
-            //        Correo = "usuario1@example.com",
-            //        Contrasenia = "password123"
-            //    }
-            //    };
-
-            //    context.Usuario.AddRange(usuarios);
-            //    context.SaveChanges();
-
-            if (context.Tarea.Any())
+            if (context.Usuario.Any())
             {
-                var tareas = new Tarea[]
+                var usuarios = new Usuario[]
                 {
+                new Usuario
+                {
+                    UsuarioNombre = "admin",
+                    Correo = "admin@example.com",
+                    Contrasenia = "admin123"
+                },
+                new Usuario
+                {
+                    UsuarioNombre = "usuario1",
+                    Correo = "usuario1@example.com",
+                    Contrasenia = "password123"
+                }
+                };
+
+                context.Usuario.AddRange(usuarios);
+                context.SaveChanges();
+
+                if (context.Tarea.Any())
+                {
+                    var tareas = new Tarea[]
+                    {
                 new Tarea
                 {
                     Nombre = "Primera tarea",
@@ -51,13 +49,14 @@ namespace ToDoListAPI.Infrastructure.Persistence.Context
                     Estado = EstadoTarea.INPROGRES,
                     Tipo = TipoTarea.PRACTICA,
                 }
-                };
+                    };
 
-                context.Tarea.AddRange(tareas);
-                context.SaveChanges();
+                    context.Tarea.AddRange(tareas);
+                    context.SaveChanges();
+                }
             }
-        }
 
+        }
     }
 }
 

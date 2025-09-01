@@ -1,4 +1,4 @@
-﻿namespace ToDoListAPI.Core.Application.Memo
+﻿namespace ToDoListAPI.Core.Application.Services.Cache
 {
     public class CacheItem<T>
     {

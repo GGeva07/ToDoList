@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDoListAPI.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using ToDoListAPI.Infrastructure.Persistence.Context;
 namespace ToDoListAPI.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(TodoListDBContext))]
-    partial class TodoListDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250901014814_adding-user-funcionality")]
+    partial class addinguserfuncionality
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,10 +67,6 @@ namespace ToDoListAPI.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Correo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

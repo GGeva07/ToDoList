@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Interfaces;
 
 namespace ToDoList.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TareaController : ControllerBase

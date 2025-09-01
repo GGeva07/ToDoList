@@ -2,10 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using ToDoListAPI.Infrastructure.Persistence;
 using ToDoListAPI.Core.Application;
+using ToDoListAPI.Infrastructure.Persistence;
 using ToDoListAPI.Infrastructure.Persistence.Context;
-using ToDoListAPI.Core.Application.Memo;
 
 namespace ToDoList
 {

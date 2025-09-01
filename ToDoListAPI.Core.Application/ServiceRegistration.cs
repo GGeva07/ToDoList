@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToDoList.Services;
 using ToDoListAPI.Core.Application.Interfaces;
 using ToDoListAPI.Core.Application.Services;
 using Microsoft.Extensions.Caching.Memory;
@@ -15,7 +14,7 @@ namespace ToDoListAPI.Core.Application
         {
             services.AddScoped<ITarea, TareaService>();
             services.AddTransient<ILogin, LoginService>();
-            services.AddTransient<IUsuario, UsuarioService>();
+            //services.AddTransient<IUsuario, UsuarioService>();
             services.AddMemoryCache();
             services.AddScoped(typeof(Cache<,>));
         }

@@ -9,8 +9,7 @@ namespace ToDoListAPI.Infrastructure.Persistence.Context
         public TodoListDBContext(DbContextOptions<TodoListDBContext> options) : base(options)
         {
         }
-
-        //public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Tarea> Tarea { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

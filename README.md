@@ -102,6 +102,7 @@ La aplicación utiliza **Code First approach** y generará automáticamente las 
 │   │   ├── 📂 ToDoListAPI.Core.Application   # Lógica de aplicación
 │   │   │   ├── 📂 DTOs
 │   │   │   ├── 📂 Fabricas
+│   │   │   ├── 📂 Helpers
 │   │   │   ├── 📂 Interfaces
 │   │   │   ├── 📂 Services
 |   |   |   |   └── 📂 Cache

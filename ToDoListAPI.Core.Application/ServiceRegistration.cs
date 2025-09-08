@@ -14,6 +14,7 @@ namespace ToDoListAPI.Core.Application
         {
             services.AddScoped<ITarea, TareaService>();
             services.AddTransient<ILogin, LoginService>();
+            services.AddScoped<INotificacion, NotificacionService>();
             //services.AddTransient<IUsuario, UsuarioService>();
             services.AddMemoryCache();
             services.AddScoped(typeof(Cache<,>));

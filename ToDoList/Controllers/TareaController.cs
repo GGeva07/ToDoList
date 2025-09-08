@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Core.Application.DTos;
 using ToDoListAPI.Core.Application.Interfaces;
+using ToDoListAPI.Core.Application.Services;
 
 namespace ToDoList.Controllers
 {
@@ -11,16 +12,17 @@ namespace ToDoList.Controllers
     public class TareaController : ControllerBase
     {
         private readonly ITarea service;
-        
-        public TareaController(ITarea service)
+        private readonly INotificacion notificacionService;
+
+        public TareaController(ITarea service, INotificacion notificacionService)
         {
             this.service = service;
+            this.notificacionService = notificacionService;
         }
 
         [HttpGet("Get-Tareas")]
         public async Task<IActionResult> GetTareas()
         {
-
             var tareas = await service.Get();
             if (tareas.Any())
             {
@@ -41,14 +43,11 @@ namespace ToDoList.Controllers
                     statusCode = 404
                 });
             }
-
-
         }
 
         [HttpGet("Get-TareaById/{id}")]
         public async Task<IActionResult> GetTareaById(int id)
         {
-
             var tarea = await service.GetById(id);
             if (tarea == null)
             {
@@ -67,51 +66,11 @@ namespace ToDoList.Controllers
                 statusCode = 200,
                 data = tarea
             });
-
-
         }
-
-        //[HttpGet("Get-Tareas-by-Usuario/{idUsuario}")]
-        //public async Task<IActionResult> GetTareasByIdUsuario(int idUsuario)
-        //{
-        //    try
-        //    {
-        //        var tareas = await service.GetTareasByIdUsuario(idUsuario);
-        //        if (tareas.Any())
-        //        {
-        //            return Ok(new
-        //            {
-        //                success = true,
-        //                message = "Tareas del usuario obtenidas exitosamente",
-        //                errorCode = 200,
-        //                data = tareas
-        //            });
-        //        }
-        //        else
-        //        {
-        //            return NotFound(new
-        //            {
-        //                success = false,
-        //                message = $"No se encontraron tareas para el usuario con id {idUsuario} o el usuario fue eliminado",
-        //                errorCode = 404
-        //            });
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return StatusCode(500, new
-        //        {
-        //            success = false,
-        //            message = $"Error obteniendo las tareas por el id Usuario: {e.Message}",
-        //            errorCode = 500
-        //        });
-        //    }
-        //}
 
         [HttpGet("Get-TareaByTitle/{Nombre}")]
         public async Task<IActionResult> GetTareaByNombre(string Nombre)
         {
-
             var tareas = await service.GetTareasByNombre(Nombre);
             if (tareas.Any())
             {
@@ -132,13 +91,11 @@ namespace ToDoList.Controllers
                     statusCode = 404
                 });
             }
-
         }
 
         [HttpPost("Post-Tarea")]
         public async Task<IActionResult> PostTarea([FromBody] TareaDto dto)
         {
-
             if (dto == null)
             {
                 return BadRequest(new
@@ -149,22 +106,24 @@ namespace ToDoList.Controllers
                 });
             }
 
-            var resultado = await service.Post(dto);
+            var resultado = await service.GetById(dto.Id);
+            if (resultado != null)
+            {
+                await notificacionService.NotificarTareaCreada(resultado);
+            }
+
             return Ok(new
             {
                 success = true,
                 message = "Tarea creada exitosamente",
-                errorCode = 200,
+                statusCode = 200,
                 data = resultado
             });
-
-
         }
 
         [HttpPut("Put-Tarea/{id}")]
         public async Task<IActionResult> PutTarea(int id, [FromBody] TareaDto dto)
         {
-
             if (dto == null)
             {
                 return BadRequest(new
@@ -176,8 +135,14 @@ namespace ToDoList.Controllers
             }
 
             dto.Id = id;
-
             var resultado = await service.Put(dto);
+            var tareaActualizada = await service.GetById(id);
+            
+            if (tareaActualizada != null)
+            {
+                await notificacionService.NotificarTareaActualizada(tareaActualizada);
+            }
+
             return Ok(new
             {
                 success = true,
@@ -185,18 +150,17 @@ namespace ToDoList.Controllers
                 statusCode = 200,
                 data = resultado
             });
-
-
         }
 
         [HttpDelete("Delete-Tarea/{id}")]
         public async Task<IActionResult> DeleteTarea(int id)
         {
-
             var resultado = await service.Delete(id);
 
             if (resultado == "Tarea eliminada correctamente")
-            {
+            { 
+                await notificacionService.NotificarTareaEliminada(id);
+
                 return Ok(new
                 {
                     success = true,
@@ -218,11 +182,15 @@ namespace ToDoList.Controllers
         [HttpDelete("DeleteAll-Tareas")]
         public async Task<IActionResult> DeleteTarea(int[] ids)
         {
-
             var resultado = await service.Delete(ids);
 
             if (resultado == "Tareas eliminadas correctamente")
             {
+                foreach (var id in ids)
+                {
+                    await notificacionService.NotificarTareaEliminada(id);
+                }
+
                 return Ok(new
                 {
                     success = true,

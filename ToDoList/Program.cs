@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ToDoListAPI.Core.Application;
+using ToDoListAPI.Core.Application.Interfaces;
+using ToDoListAPI.Core.Application.Services;
+using ToDoListAPI.Core.Application.SignalR;
 using ToDoListAPI.Infrastructure.Persistence;
 using ToDoListAPI.Infrastructure.Persistence.Context;
 
@@ -19,7 +22,13 @@ namespace ToDoList
             builder.Services.AddSwaggerGen();
             builder.Services.ResgistrationPersistenceLayer(builder.Configuration);
             builder.Services.RegistrationApplicationLayer();
+
+            builder.Services.AddSignalR();
+
+            builder.Services.AddScoped<INotificacion, NotificacionService>();
+
             
+
 
             var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -50,6 +59,8 @@ namespace ToDoList
             });
 
             var app = builder.Build();
+
+            app.MapHub<SignalHub>("/tareaHub");
 
             using (var scope = app.Services.CreateScope())
             {
